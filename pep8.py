@@ -101,6 +101,7 @@ import time
 import inspect
 import keyword
 import tokenize
+import unicodedata
 from optparse import OptionParser
 from fnmatch import fnmatch
 try:
@@ -247,7 +248,11 @@ def maximum_line_length(physical_line):
             # The line could contain multi-byte characters
             if not hasattr(line, 'decode'):   # Python 3
                 line = line.encode('latin-1')
-            length = len(line.decode('utf-8'))
+            line = line.decode('utf-8')
+            length = len(line)
+            if options.fullwidth:
+                length += len([c for c in line
+                               if unicodedata.east_asian_width(c) in 'FWA'])
         except UnicodeDecodeError:
             pass
     if length > MAX_LINE_LENGTH:
@@ -1291,6 +1296,11 @@ def process_options(arglist=None):
                       help="run regression tests from dir")
     parser.add_option('--doctest', action='store_true',
                       help="run doctest on myself")
+    # FIXME: testsuite/utf-8.py fails with --fullwidth option, and
+    # testsuite/fullwidth.py fails without --fullwidth option.
+    parser.add_option('--fullwidth', action='store_true', default=False,
+                      help="treat one full-width character as two normal "
+                        "characters at E501 (default: False)")
     options, args = parser.parse_args(arglist)
     if options.testsuite:
         args.append(options.testsuite)

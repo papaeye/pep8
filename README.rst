@@ -110,6 +110,8 @@ Quick help is available on the command line::
     --benchmark          measure processing speed
     --testsuite=dir      run regression tests from dir
     --doctest            run doctest on myself
+    --fullwidth          treat one full-width character as two normal characters
+                         at E501 (default: False)
 
 Feedback
 --------
