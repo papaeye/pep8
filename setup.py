@@ -1,24 +1,20 @@
-from setuptools import setup, find_packages
+# -*- coding: utf-8 -*-
+from __future__ import with_statement
+from setuptools import setup
 
 
 def get_version():
-    f = open('pep8.py')
-    try:
+    with open('pep8.py') as f:
         for line in f:
             if line.startswith('__version__'):
                 return eval(line.split('=')[-1])
-    finally:
-        f.close()
 
 
 def get_long_description():
     descr = []
-    for fname in 'README.rst', 'CHANGES.txt':   # , 'TODO.txt'
-        f = open(fname)
-        try:
+    for fname in 'README.rst', 'CHANGES.txt':
+        with open(fname) as f:
             descr.append(f.read())
-        finally:
-            f.close()
     return '\n\n'.join(descr)
 
 
@@ -30,15 +26,15 @@ setup(
     keywords='pep8',
     author='Johann C. Rocholl',
     author_email='johann@rocholl.net',
-    url='http://github.com/jcrocholl/pep8',
+    url='http://pep8.readthedocs.org/',
     license='Expat license',
     py_modules=['pep8'],
     namespace_packages=[],
     include_package_data=True,
     zip_safe=False,
     install_requires=[
-        'setuptools',
-        # -*- Extra requirements: -*-
+        # Broken with Python 3: https://github.com/pypa/pip/issues/650
+        # 'setuptools',
     ],
     entry_points={
         'console_scripts': [
@@ -56,4 +52,5 @@ setup(
         'Programming Language :: Python :: 3',
         'Topic :: Software Development :: Libraries :: Python Modules',
     ],
+    test_suite='testsuite.test_all.suite',
 )
